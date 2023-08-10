@@ -16,14 +16,56 @@ Return true if you can reach the last index, or false otherwise.
  * @return {boolean}
  */
 
+// Greedy
+var canJump = function(nums) {
+    let goal = nums.length - 1;
 
+    for (let i = nums.length - 1; i >= 0; i--) {
+        if (i + nums[i] >= goal) goal = i;
+    }
+
+    return goal == 0 ? true : false
+}
+
+
+
+// Bottom-up
+// Runtime: O(n^2) Space: O(n)
+var canJump = function(nums) {
+    // memo table to keep track of 1/0/-1 value for each index
+    // 1/0/-1 stands for good/bad/unknown
+    const memo = Array(nums.length).fill(-1);
+    // const memo = new Array(nums.length);
+    // for (let i = 0; i < nums.length; i++) {
+    //     memo[i] = -1;
+    // }
+    // we set the last point to be reachable
+    memo[nums.length - 1] = 1;
+
+    for (let i = nums.length - 2; i >= 0; i--) {
+        let furthestJump = Math.min(i + nums[i], nums.length - 1);
+        for (let j = i + 1; j <= furthestJump; j++) {
+            if (memo[j] == 1) {
+                memo[i] = 1;
+                break;
+            }
+        }
+    }
+
+    return memo[0] == 1;
+}
+
+
+
+// Top-Down Dynamic programming method (memoization table)
+// Runtime: O(n^2) Space: O(2n)
 var canJump = function(nums) {
     // memo table to keep track of 1/0/-1 value for each index
     // 1/0/-1 stands for good/bad/unknown
     // let memo = Array(nums.length).fill(-1);
     const memo = new Array(nums.length);
     for (let i = 0; i < nums.length; i++) {
-        memo.push(-1);
+        memo[i] = -1;
     }
     // we set the last point to be reachable
     memo[nums.length - 1] = 1;
@@ -39,7 +81,7 @@ function jump(nums, start, memo) {
     }
 
     let furthestJump = Math.min(start + nums[start], nums.length - 1);
-    for (let nextPosition = start + 1; nextPosition <= furthestJump; nextPosition++) {
+    for (let nextPosition = furthestJump; nextPosition > start; nextPosition--) {
         if (jump(nums, nextPosition, memo)) {
             memo[start] = 1;
             return true;
