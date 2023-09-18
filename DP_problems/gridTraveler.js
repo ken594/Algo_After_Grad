@@ -11,7 +11,7 @@ Write a function gridTraveler(m, n) that calculates this.
 */
 
 // memoization
-// Time: O(m+n) , Space: O(m+n)
+// Time: O(m*n) , Space: O(m+n)
 const gridTraveler = (m, n, memo = {}) => {
     const key = m + "," + n;
     // are the args in the memo
