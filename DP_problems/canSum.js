@@ -22,13 +22,14 @@ const canSum = (targetSum, numbers, memo = {}) => {
     for (let num of numbers) {
         const remainder = targetSum - num;
         if (canSum(remainder, numbers, memo) === true) {
-            memo[remainder] = true;
-            return memo[remainder];
+            // memo[remainder] = true;
+            memo[targetSum] = true;
+            return true;
         }
     }
 
     memo[targetSum] = false;
-    return memo[targetSum];
+    return false;
 };
 
 // brute force recursion
