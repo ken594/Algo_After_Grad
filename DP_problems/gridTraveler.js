@@ -10,18 +10,40 @@ Write a function gridTraveler(m, n) that calculates this.
 
 */
 
+// Tabulation
+// Time: O(m*n) , Space: O(m*n)
+const gridTraveler = (m, n) => {
+    const table = Array(m + 1)
+        .fill()
+        .map(() => Array(n + 1).fill(0));
+    
+    table[1][1] = 1;
+
+    for (let i = 0; i <= m; i++) {
+        for (let j = 0; j <= n; j++) {
+            const current = table[i][j];
+            // right neighbor
+            if (j + 1 <= n) table[i][j+1] += current;
+            // down neighbor
+            if (i + 1 <= m) table[i+1][j] += current;
+        }
+    }
+
+    return table[m][n];
+};
+
 // memoization
 // Time: O(m*n) , Space: O(m+n)
-const gridTraveler = (m, n, memo = {}) => {
-    const key = m + "," + n;
-    // are the args in the memo
-    if (key in memo) return memo[key];
-    if (m === 1 && n === 1) return 1;
-    if (m === 0 || n === 0) return 0;
+// const gridTraveler = (m, n, memo = {}) => {
+//     const key = m + "," + n;
+//     // are the args in the memo
+//     if (key in memo) return memo[key];
+//     if (m === 1 && n === 1) return 1;
+//     if (m === 0 || n === 0) return 0;
 
-    memo[key] = gridTraveler(m - 1, n, memo) + gridTraveler(m, n - 1, memo);
-    return memo[key];
-};
+//     memo[key] = gridTraveler(m - 1, n, memo) + gridTraveler(m, n - 1, memo);
+//     return memo[key];
+// };
 
 
 // recursion
