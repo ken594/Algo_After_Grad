@@ -8,39 +8,66 @@ If there is a tie for the shortest combination, you may return any one of the sh
 
 */
 
-// memoization
+// *** Tabulation ***
+
 // m = target sum
 // n = numbers.length
 // Time: O(n*m * m), Space: O(m * m)
-const bestSum = (targetSum, numbers, memo = {}) => {
-    // base case
-    if (targetSum in memo) return memo[targetSum];
-    if (targetSum === 0) return [];
-    if (targetSum < 0) return null;
 
-    let shortestCombination = null;
+const bestSum = (targetSum, numebers) => {
+    const table = Array(targetSum + 1).fill(null);
+    table[0] = [];
 
-    for (let num of numbers) {
-        const remainder = targetSum - num;
-        const remainderCombination = bestSum(remainder, numbers, memo);
-
-        if (remainderCombination !== null) {
-            const combination = [ ...remainderCombination, num ];
-            // if the combination is shorter than the current shortest, update it
-            if (shortestCombination === null || combination.length < shortestCombination.length) {
-                shortestCombination = combination;
+    for (let i = 0; i <= targetSum; i++) {
+        if (table[i] !== null) {
+            for (let num of numebers) {
+                const combination = [ ...table[i], num];
+                // if this combination is shorter than what is already stored
+                if (!table[i + num] || table[i + num].length > combination.length) table[i + num] = combination;
             }
         }
     }
 
-    memo[targetSum] = shortestCombination;
-    return shortestCombination;
+    return table[targetSum];
 };
 
-// brute force recursion
+// *** memoization ***
+
+// m = target sum
+// n = numbers.length
+// Time: O(n*m * m), Space: O(m * m)
+
+// const bestSum = (targetSum, numbers, memo = {}) => {
+//     // base case
+//     if (targetSum in memo) return memo[targetSum];
+//     if (targetSum === 0) return [];
+//     if (targetSum < 0) return null;
+
+//     let shortestCombination = null;
+
+//     for (let num of numbers) {
+//         const remainder = targetSum - num;
+//         const remainderCombination = bestSum(remainder, numbers, memo);
+
+//         if (remainderCombination !== null) {
+//             const combination = [ ...remainderCombination, num ];
+//             // if the combination is shorter than the current shortest, update it
+//             if (shortestCombination === null || combination.length < shortestCombination.length) {
+//                 shortestCombination = combination;
+//             }
+//         }
+//     }
+
+//     memo[targetSum] = shortestCombination;
+//     return shortestCombination;
+// };
+
+// *** brute force recursion ***
+
 // m = target sum
 // n = numbers.length
 // Time: O(n^m * m), Space: O(m * m)
+
 // const bestSum = (targetSum, numbers) => {
 //     // base case
 //     if (targetSum === 0) return [];

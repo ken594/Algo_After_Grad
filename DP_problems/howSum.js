@@ -9,31 +9,54 @@ If there are multiple combinations possibie, you may return any single one.
 
 */
 
-// memoization
+// *** Tabulation ***
+
 // m = target sum
 // n = numbers.length
 // Time: O(m*n * m), Space: O(m*m)
-const howSum = (targetSum, numbers, memo = {}) => {
-    // base case
-    if (targetSum in memo) return memo[targetSum];
-    if (targetSum === 0) return [];
-    if (targetSum < 0) return null;
+const howSum = (targetSum, numbers) => {
+    const table = Array(targetSum + 1).fill(null);
+    table[0] = [];
 
-    for (let num of numbers) {
-        const remainder = targetSum - num;
-        const remainderResult = howSum(remainder, numbers, memo);
-        if (remainderResult !== null) {
-            memo[targetSum] = [ ...remainderResult, num ];
-            return memo[targetSum];
+    for (let i = 0; i <= targetSum; i++) {
+        if (table[i] !== null) {
+            for (let num of numbers) {
+                table[i + num] = [ ...table[i], num ];
+            }
         }
     }
 
-    memo[targetSum] = null;
-    return null;
+    return table[targetSum];
 };
 
 
-// brute force recursion
+// *** memoization ***
+
+// m = target sum
+// n = numbers.length
+// Time: O(m*n * m), Space: O(m*m)
+// const howSum = (targetSum, numbers, memo = {}) => {
+//     // base case
+//     if (targetSum in memo) return memo[targetSum];
+//     if (targetSum === 0) return [];
+//     if (targetSum < 0) return null;
+
+//     for (let num of numbers) {
+//         const remainder = targetSum - num;
+//         const remainderResult = howSum(remainder, numbers, memo);
+//         if (remainderResult !== null) {
+//             memo[targetSum] = [ ...remainderResult, num ];
+//             return memo[targetSum];
+//         }
+//     }
+
+//     memo[targetSum] = null;
+//     return null;
+// };
+
+
+// *** brute force recursion ***
+
 // m = target sum
 // n = numbers.length
 // Time: O(n^m * m), Space: O(m)
